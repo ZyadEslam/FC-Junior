@@ -1,0 +1,193 @@
+// ─────────────────────────────────────────────────────────────
+// Giglet — Prisma schema
+// Children complete skill missions; a parent-approved, invite-only
+// family circle funds completed work via weekly batched payouts.
+// ─────────────────────────────────────────────────────────────
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  PARENT
+  DONOR
+}
+
+enum AgeBand {
+  AGE_8_10
+  AGE_11_13
+  AGE_14_17
+}
+
+enum TaskCategory {
+  SCRATCH
+}
+
+enum Difficulty {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum SubmissionStatus {
+  PENDING
+  APPROVED
+  CHANGES_REQUESTED
+}
+
+enum DonationStatus {
+  PENDING_PAYOUT
+  PAID_OUT
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  role         Role
+  createdAt    DateTime @default(now())
+
+  sessions    Session[]
+  children    Child[]        @relation("ParentChildren")
+  memberships CircleMember[] @relation("DonorMemberships")
+  donations   Donation[]     @relation("DonorDonations")
+  invites     Invite[]       @relation("InviteCreator")
+}
+
+model Session {
+  id        String   @id // sha256 hash of the bearer token stored in the cookie
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model Child {
+  id              String   @id @default(cuid())
+  parentId        String
+  parent          User     @relation("ParentChildren", fields: [parentId], references: [id], onDelete: Cascade)
+  firstName       String
+  ageBand         AgeBand
+  avatarColor     String   @default("emerald")
+  weeklyGoalCents Int      @default(2500)
+  createdAt       DateTime @default(now())
+
+  submissions Submission[]
+  members     CircleMember[]
+  invites     Invite[]
+  donations   Donation[]
+  payouts     Payout[]
+
+  @@index([parentId])
+}
+
+model Task {
+  id               String       @id @default(cuid())
+  slug             String       @unique
+  ageBand          AgeBand
+  category         TaskCategory @default(SCRATCH)
+  title            String
+  summary          String
+  instructions     String
+  deliverable      String
+  rubric           Json // string[]
+  difficulty       Difficulty
+  points           Int
+  estimatedMinutes Int
+  order            Int
+  isPublished      Boolean      @default(true)
+
+  submissions Submission[]
+}
+
+model Submission {
+  id         String           @id @default(cuid())
+  childId    String
+  child      Child            @relation(fields: [childId], references: [id], onDelete: Cascade)
+  taskId     String
+  task       Task             @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  note       String
+  proofLink  String?
+  proofImage String?          @db.Text // data-URL for MVP; object storage in production
+  status     SubmissionStatus @default(PENDING)
+  feedback   String?
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+  reviewedAt DateTime?
+
+  donations Donation[]
+
+  @@unique([childId, taskId]) // one live submission per task; resubmits update in place
+  @@index([childId, status])
+  @@index([taskId])
+}
+
+model CircleMember {
+  id            String   @id @default(cuid())
+  childId       String
+  child         Child    @relation(fields: [childId], references: [id], onDelete: Cascade)
+  donorId       String
+  donor         User     @relation("DonorMemberships", fields: [donorId], references: [id], onDelete: Cascade)
+  relationLabel String   @default("Family member")
+  createdAt     DateTime @default(now())
+
+  @@unique([childId, donorId])
+  @@index([donorId])
+}
+
+model Invite {
+  id          String   @id @default(cuid())
+  code        String   @unique
+  childId     String
+  child       Child    @relation(fields: [childId], references: [id], onDelete: Cascade)
+  createdById String
+  createdBy   User     @relation("InviteCreator", fields: [createdById], references: [id], onDelete: Cascade)
+  expiresAt   DateTime
+  uses        Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  @@index([childId])
+}
+
+model Donation {
+  id           String         @id @default(cuid())
+  childId      String
+  child        Child          @relation(fields: [childId], references: [id], onDelete: Cascade)
+  donorId      String
+  donor        User           @relation("DonorDonations", fields: [donorId], references: [id], onDelete: Cascade)
+  submissionId String?
+  submission   Submission?    @relation(fields: [submissionId], references: [id], onDelete: SetNull)
+  amountCents  Int
+  message      String?
+  status       DonationStatus @default(PENDING_PAYOUT)
+  weekKey      String // e.g. "2026-W38" — drives weekly batching
+  payoutId     String?
+  payout       Payout?        @relation(fields: [payoutId], references: [id], onDelete: SetNull)
+  createdAt    DateTime       @default(now())
+
+  @@index([childId, status])
+  @@index([donorId])
+}
+
+model Payout {
+  id            String   @id @default(cuid())
+  childId       String
+  child         Child    @relation(fields: [childId], references: [id], onDelete: Cascade)
+  amountCents   Int
+  donationCount Int
+  weekKeys      String
+  status        String   @default("COMPLETED") // simulated transfer in MVP
+  createdAt     DateTime @default(now())
+
+  donations Donation[]
+
+  @@index([childId])
+}

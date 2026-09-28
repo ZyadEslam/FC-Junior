@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-stone-50 text-stone-900 antialiased;
+}
+
+::selection {
+  @apply bg-brand-200 text-brand-950;
+}
+
+/* Subtle dot texture used on hero / empty panels */
+.dot-grid {
+  background-image: radial-gradient(circle, rgb(12 20 17 / 0.055) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+/* Thin, unobtrusive scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(214 211 209) transparent;
+}
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+*::-webkit-scrollbar-thumb {
+  @apply rounded-full bg-stone-300;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
