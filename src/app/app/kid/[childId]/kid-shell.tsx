@@ -24,7 +24,7 @@ export function KidShell({
         <div className="mx-auto flex h-16 max-w-5xl items-center justify-between px-4 sm:px-6">
           <Link href={homeHref} className="flex items-center gap-3">
             <Logo size="sm" withWordmark={false} />
-            <span className="font-display text-[17px] font-bold text-stone-900">
+            <span className="hidden font-display text-[17px] font-bold text-stone-900 min-[440px]:inline">
               {child.firstName}&apos;s studio
             </span>
           </Link>

@@ -48,7 +48,7 @@ export default function LandingPage() {
       {/* ── Nav ── */}
       <header className="sticky top-0 z-40 border-b-2 border-ink bg-paper/90 backdrop-blur-sm">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
-          <Logo />
+          <Logo size="sm" className="whitespace-nowrap text-[18px] sm:text-xl" />
           <nav className="hidden items-center gap-6 text-[13px] font-bold uppercase tracking-wide md:flex">
             <a href="#how" className="hover:underline">How it works</a>
             <a href="#quests" className="hover:underline">The studio</a>
@@ -57,10 +57,10 @@ export default function LandingPage() {
           </nav>
           <div className="flex items-center gap-2">
             <Link href="/sign-in">
-              <Button variant="ghost" size="sm" className="uppercase">Sign in</Button>
+              <Button variant="ghost" size="sm" className="px-2 text-xs uppercase sm:px-3 sm:text-sm">Sign in</Button>
             </Link>
             <Link href="/sign-up">
-              <Button size="sm" variant="amber">Start your studio</Button>
+              <Button size="sm" variant="amber" className="px-2 text-xs sm:px-3 sm:text-sm">Start studio</Button>
             </Link>
           </div>
         </div>

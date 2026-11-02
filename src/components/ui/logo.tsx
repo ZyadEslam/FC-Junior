@@ -21,7 +21,7 @@ export function Logo({
         className
       )}
     >
-      FC-Junior
+      <span className="whitespace-nowrap">FC-Junior</span>
       <span className="ml-1 inline-block h-[0.5em] w-[0.5em] border-2 border-ink bg-taxi-400" aria-hidden />
     </span>
   );
