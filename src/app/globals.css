@@ -4,6 +4,9 @@
 
 :root {
   color-scheme: light;
+  /* Local-first font stacks avoid network-dependent font builds on deployment. */
+  --font-inter: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: Avenir Next, Avenir, Inter, ui-sans-serif, system-ui, sans-serif;
 }
 
 html {
