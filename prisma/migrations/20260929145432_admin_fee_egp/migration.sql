@@ -1,0 +1,6 @@
+-- AlterEnum
+ALTER TYPE "Role" ADD VALUE 'ADMIN';
+
+-- AlterTable
+ALTER TABLE "Donation" ADD COLUMN     "currency" TEXT NOT NULL DEFAULT 'EGP',
+ADD COLUMN     "feeCents" INTEGER NOT NULL DEFAULT 0;

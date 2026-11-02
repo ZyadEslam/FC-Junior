@@ -1,0 +1,97 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-paper text-stone-900 antialiased;
+}
+
+/* Subtle dot texture used on hero / empty panels */
+.dot-grid {
+  background-image: radial-gradient(circle, rgb(36 33 30 / 0.06) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
+
+/* ── neo-brutalist textures ─────────────────────────────── */
+
+/* taxi-style checkerboard strip */
+.checker {
+  background-image:
+    linear-gradient(45deg, #24211E 25%, transparent 25%, transparent 75%, #24211E 75%),
+    linear-gradient(45deg, #24211E 25%, transparent 25%, transparent 75%, #24211E 75%);
+  background-color: transparent;
+  background-size: 16px 16px;
+  background-position: 0 0, 8px 8px;
+}
+.checker-light {
+  background-image:
+    linear-gradient(45deg, rgb(255 255 255 / 0.25) 25%, transparent 25%, transparent 75%, rgb(255 255 255 / 0.25) 75%),
+    linear-gradient(45deg, rgb(255 255 255 / 0.25) 25%, transparent 25%, transparent 75%, rgb(255 255 255 / 0.25) 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 8px 8px;
+}
+
+/* diagonal hazard stripes */
+.stripes {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    #24211E 0,
+    #24211E 10px,
+    transparent 10px,
+    transparent 22px
+  );
+}
+
+/* denser dot grid for dark panels */
+.dot-grid-dark {
+  background-image: radial-gradient(circle, rgb(255 206 0 / 0.18) 1.2px, transparent 1.2px);
+  background-size: 20px 20px;
+}
+
+/* Studio surfaces: structured enough for older makers without feeling corporate. */
+.studio-grid {
+  background-image:
+    linear-gradient(rgb(255 255 255 / 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / 0.06) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.portfolio-grid {
+  background-image: linear-gradient(135deg, rgb(36 33 30 / 0.035) 25%, transparent 25%, transparent 50%, rgb(36 33 30 / 0.035) 50%, rgb(36 33 30 / 0.035) 75%, transparent 75%);
+  background-size: 18px 18px;
+}
+
+.jar-glow {
+  background:
+    radial-gradient(circle at 78% 18%, rgb(255 255 255 / 0.7), transparent 19%),
+    radial-gradient(circle at 75% 65%, rgb(229 189 85 / 0.34), transparent 28%),
+    linear-gradient(135deg, #292622 0%, #453819 52%, #b1842e 160%);
+}
+
+::selection {
+  @apply bg-taxi-100 text-ink;
+}
+
+/* Thin, unobtrusive scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(231 229 228) transparent;
+}
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+*::-webkit-scrollbar-thumb {
+  @apply rounded-full bg-stone-300;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
